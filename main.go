@@ -16,8 +16,8 @@ type BaseConfig struct {
 }
 
 // loadConfig loads the config.yaml from the source directory
-func loadConfig(ctx context.Context, src dagger.Directory) (c BaseConfig, err error) {
-	yml, _ := lib.OpenConfigYaml(ctx, src)
+func loadConfig(ctx context.Context, src dagger.Directory) (c BaseConfig, yml string, err error) {
+	yml, _ = lib.OpenConfigYaml(ctx, src)
 	err = yaml.Unmarshal([]byte(yml), &c)
 	return
 }
