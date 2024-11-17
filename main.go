@@ -15,13 +15,6 @@ type BaseConfig struct {
 	Flavor flavors.Flavor `yaml:"flavor"`
 }
 
-func (m *ContainerBuilds) Config(
-	ctx context.Context,
-	src dagger.Directory,
-) (s string, err error) {
-	return lib.OpenConfigYaml(ctx, src)
-}
-
 // loadConfig loads the config.yaml from the source directory
 func loadConfig(ctx context.Context, src dagger.Directory) (c BaseConfig, err error) {
 	yml, _ := lib.OpenConfigYaml(ctx, src)
