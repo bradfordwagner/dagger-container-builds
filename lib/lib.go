@@ -3,6 +3,7 @@ package lib
 import (
 	"context"
 	"dagger/container-builds/internal/dagger"
+	"strings"
 )
 
 // OpenConfigYaml opens the config.yaml file
@@ -25,4 +26,10 @@ func ArchToRunner(arch string) (s string) {
 		return "ubuntu-latest"
 	}
 	return
+}
+
+// ArchImageName returns the image name for the given image and architecture
+func ArchImageName(image, arch string) (s string) {
+	arch = strings.ReplaceAll(arch, "/", "_")
+	return image + "-" + arch
 }
