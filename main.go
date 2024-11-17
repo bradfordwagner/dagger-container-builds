@@ -15,11 +15,6 @@ type BaseConfig struct {
 	Flavor flavors.Flavor `yaml:"flavor"`
 }
 
-// Returns a container that echoes whatever string argument is provided
-func (m *ContainerBuilds) Echo() string {
-	return "hello world"
-}
-
 func (m *ContainerBuilds) Config(
 	ctx context.Context,
 	src dagger.Directory,
