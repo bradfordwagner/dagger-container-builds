@@ -1,10 +1,15 @@
 package mirror
 
-import "gopkg.in/yaml.v2"
+import (
+	"dagger/container-builds/lib/flavors"
+
+	"gopkg.in/yaml.v2"
+)
 
 type Config struct {
-	TargetRepo string  `yaml:"target_repo"`
-	Builds     []Build `yaml:"builds"`
+	Flavor     flavors.Flavor `yaml:"flavor"`
+	TargetRepo string         `yaml:"target_repo"`
+	Builds     []Build        `yaml:"builds"`
 }
 
 type Build struct {
