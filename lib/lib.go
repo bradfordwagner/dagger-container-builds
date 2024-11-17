@@ -5,7 +5,7 @@ import (
 	"dagger/container-builds/internal/dagger"
 )
 
-// Returns lines that match a pattern in the files of the provided Directory
+// OpenConfigYaml opens the config.yaml file
 func OpenConfigYaml(
 	ctx context.Context,
 	src dagger.Directory,
