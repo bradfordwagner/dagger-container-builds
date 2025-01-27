@@ -17,7 +17,8 @@ func OpenConfigYaml(
 
 func ArchToRunner(arch string) (s string) {
 	archs := map[string]string{
-		"linux/arm64": "arm64",
+		"linux/arm64": "ubuntu-24.04-arm",
+		//"linux/arm64": "arm64",
 	}
 
 	// default to ubuntu-latest
