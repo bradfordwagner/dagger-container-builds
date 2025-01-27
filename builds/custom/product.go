@@ -1,4 +1,4 @@
-package mirror
+package custom
 
 import (
 	"dagger/container-builds/lib"
@@ -7,11 +7,11 @@ import (
 )
 
 type ProductFormat struct {
-	Repo         string `json:"repo"`
-	Tag          string `json:"tag"`
-	Architecture string `json:"arch"`
-	Runner       string `json:"runner"`
-	TargetImage  string `json:"target_image"` // without architecture suffix
+	Architecture  string `json:"arch"`
+	OS            string `json:"os"`
+	Runner        string `json:"runner"`
+	TargetImage   string `json:"target_image"` // without architecture suffix
+	UpstreamImage string `json:"upstream_image"`
 
 	// required for pipeline info
 	Index   int    `json:"index"`
@@ -33,13 +33,13 @@ func Product(
 		for _, a := range b.Architectures {
 			runner := lib.ArchToRunner(a)
 			products = append(products, ProductFormat{
-				Architecture: a,
-				Index:        i,
-				Repo:         b.Repo,
-				Runner:       runner,
-				Tag:          b.Tag,
-				TargetImage:  imageTag(c, b, version),
-				Display:      fmt.Sprintf("%s-%s(%s)", b.Repo, version, a),
+				Architecture:  a,
+				Index:         i,
+				Runner:        runner,
+				TargetImage:   imageTag(c, b, version),
+				OS:            b.OS,
+				UpstreamImage: fmt.Sprintf("%s:%s-%s", c.Upstream.Repo, c.Upstream.Tag, b.OS),
+				Display:       fmt.Sprintf("%s-%s(%s)", b.OS, version, a),
 			})
 			i++
 		}
@@ -49,11 +49,7 @@ func Product(
 }
 
 func imageTag(c Config, b Build, version string) string {
-	repo := b.Repo
-	if b.RepoOverride != "" {
-		repo = b.RepoOverride
-	}
-	return fmt.Sprintf("%s:%s-%s_%s", c.TargetRepo, version, repo, b.Tag)
+	return fmt.Sprintf("%s:%s-%s", c.TargetRepo, version, b.OS)
 }
 
 // ProductJson returns the cartesian product of all builds as a json string, used for github actions matrix

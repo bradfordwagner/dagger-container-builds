@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/container-builds/builds/custom"
 	"dagger/container-builds/builds/mirror"
 	"dagger/container-builds/internal/dagger"
 	"dagger/container-builds/lib/flavors"
@@ -21,6 +22,8 @@ func (m *ContainerBuilds) ProductJson(
 	}
 
 	switch c.Flavor {
+	case flavors.FlavorCustom:
+		s, err = custom.ProductJson(yml, version)
 	case flavors.FlavorMirror:
 		s, err = mirror.ProductJson(yml, version)
 	default:

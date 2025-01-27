@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/container-builds/builds/custom"
 	"dagger/container-builds/builds/mirror"
 	"dagger/container-builds/internal/dagger"
 	"dagger/container-builds/lib/flavors"
@@ -25,6 +26,8 @@ func (m *ContainerBuilds) Manifest(
 
 	container := dag.Container()
 	switch c.Flavor {
+	case flavors.FlavorCustom:
+		s, err = custom.Manifest(ctx, container, yml, version, actor, token)
 	case flavors.FlavorMirror:
 		s, err = mirror.Manifest(ctx, container, yml, version, actor, token)
 	default:
