@@ -39,7 +39,7 @@ func Product(
 				Runner:       runner,
 				Tag:          b.Tag,
 				TargetImage:  imageTag(c, b, version),
-				Display:      fmt.Sprintf("%s-%s(%s)", b.Repo, version, a),
+				Display:      fmt.Sprintf("%d:%s-%s(%s)", i, b.Repo, version, a),
 			})
 			i++
 		}
