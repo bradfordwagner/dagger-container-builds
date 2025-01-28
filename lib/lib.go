@@ -34,3 +34,10 @@ func ArchImageName(image, arch string) (s string) {
 	arch = strings.ReplaceAll(arch, "/", "_")
 	return image + "-" + arch
 }
+
+func FileContents(ctx context.Context, dir *dagger.Directory, path string) (contents string, err error) {
+	if file := dir.File(path); file != nil {
+		contents, err = file.Contents(ctx)
+	}
+	return
+}

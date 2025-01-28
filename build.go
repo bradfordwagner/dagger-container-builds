@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/container-builds/builds/ansible"
 	"dagger/container-builds/builds/custom"
 	"dagger/container-builds/builds/mirror"
 	"dagger/container-builds/internal/dagger"
@@ -28,7 +29,12 @@ func (m *ContainerBuilds) Build(
 		return
 	}
 
+	client := dagger.Connect()
 	switch c.Flavor {
+	case flavors.FlavorAnsibleRole:
+		s, err = ansible.BuildContainer(ctx, client, src, index, version, yml)
+	case flavors.FlavorAnsiblePlaybook:
+		s, err = ansible.BuildContainer(ctx, client, src, index, version, yml)
 	case flavors.FlavorCustom:
 		s, err = custom.BuildContainer(ctx, src, index, version, yml)
 	case flavors.FlavorMirror:
