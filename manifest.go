@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/container-builds/builds/ansible"
 	"dagger/container-builds/builds/custom"
 	"dagger/container-builds/builds/mirror"
 	"dagger/container-builds/internal/dagger"
@@ -26,6 +27,8 @@ func (m *ContainerBuilds) Manifest(
 
 	container := dag.Container()
 	switch c.Flavor {
+	case flavors.FlavorAnsiblePlaybook:
+		s, err = ansible.Manifest(ctx, container, yml, version, actor, token)
 	case flavors.FlavorCustom:
 		s, err = custom.Manifest(ctx, container, yml, version, actor, token)
 	case flavors.FlavorMirror:

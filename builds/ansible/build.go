@@ -73,7 +73,6 @@ func BuildContainer(
 	err = nil
 	o = strings.Join([]string{target, productJson}, "\n")
 
-	// publish only through pipeline
 	if config.Flavor == flavors.FlavorAnsiblePlaybook {
 		_, err = container.Publish(ctx, target)
 	}
