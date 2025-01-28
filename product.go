@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"dagger/container-builds/builds/ansible"
 	"dagger/container-builds/builds/custom"
 	"dagger/container-builds/builds/mirror"
 	"dagger/container-builds/internal/dagger"
@@ -13,7 +14,7 @@ import (
 func (m *ContainerBuilds) ProductJson(
 	ctx context.Context,
 	src dagger.Directory,
-	// +default="latest"
+// +default="latest"
 	version string,
 ) (s string, err error) {
 	c, yml, err := loadConfig(ctx, src)
@@ -22,6 +23,10 @@ func (m *ContainerBuilds) ProductJson(
 	}
 
 	switch c.Flavor {
+	case flavors.FlavorAnsibleRole:
+		s, err = ansible.ProductJson(yml, version)
+	case flavors.FlavorAnsiblePlaybook:
+		s, err = ansible.ProductJson(yml, version)
 	case flavors.FlavorCustom:
 		s, err = custom.ProductJson(yml, version)
 	case flavors.FlavorMirror:
