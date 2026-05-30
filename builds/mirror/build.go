@@ -40,13 +40,13 @@ func BuildContainer(
 	if len(product.Commands) > 0 {
 		scriptEntries, _ := src.Directory("scripts").Entries(ctx)
 		if len(scriptEntries) > 0 {
-			runSteps += "COPY scripts /tmp/build/scripts\nRUN chmod +x /tmp/build/scripts/*.sh\n"
+			runSteps += "WORKDIR /src\nCOPY scripts scripts\nRUN chmod +x scripts/*.sh\n"
 		}
 		for _, cmd := range product.Commands {
 			runSteps += fmt.Sprintf("RUN %s\n", cmd)
 		}
 		if len(scriptEntries) > 0 {
-			runSteps += "RUN rm -rf /tmp/build/scripts\n"
+			runSteps += "RUN rm -rf /src/scripts\n"
 		}
 	}
 	dockerfile := fmt.Sprintf("FROM %s:%s\n%s", product.Repo, product.Tag, runSteps)
