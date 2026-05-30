@@ -17,6 +17,7 @@ type Build struct {
 	RepoOverride  string   `yaml:"repo_override"` // renames repo to override in the target image
 	Tag           string   `yaml:"tag"`
 	Architectures []string `yaml:"archs"`
+	Commands      []string `yaml:"commands"`
 }
 
 func loadConfig(configString string) (c Config, err error) {
