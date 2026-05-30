@@ -12,6 +12,7 @@ type ProductFormat struct {
 	Architecture string `json:"arch"`
 	Runner       string `json:"runner"`
 	TargetImage  string `json:"target_image"` // without architecture suffix
+	Commands     []string `json:"commands"`
 
 	// required for pipeline info
 	Index   int    `json:"index"`
@@ -39,6 +40,7 @@ func Product(
 				Runner:       runner,
 				Tag:          b.Tag,
 				TargetImage:  imageTag(c, b, version),
+				Commands:     b.Commands,
 				Display:      fmt.Sprintf("%d:%s-%s(%s)", i, b.Repo, version, a),
 			})
 			i++
