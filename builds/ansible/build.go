@@ -47,10 +47,12 @@ func BuildContainer(
 
 	// find requirements
 	requirements := []string{"requirements.yml", "meta/requirements.yml"}
-	dir := container.Directory("/src")
 	for _, requirement := range requirements {
-		var contents string
-		if contents, err = lib.FileContents(ctx, dir, requirement); contents != "" {
+		var exists bool
+		if exists, err = fileExists(ctx, src, requirement); err != nil {
+			return
+		}
+		if exists {
 			container, err = container.WithExec([]string{"ansible-galaxy", "install", "-r", requirement}).Sync(ctx)
 			if err != nil {
 				return
@@ -61,16 +63,17 @@ func BuildContainer(
 	// run playbook
 	playbooks := []string{"test.yml", "playbook.yml"}
 	for _, playbook := range playbooks {
-		var contents string
-		if contents, err = lib.FileContents(ctx, dir, playbook); contents != "" {
+		var exists bool
+		if exists, err = fileExists(ctx, src, playbook); err != nil {
+			return
+		}
+		if exists {
 			container, err = container.WithExec([]string{"ansible-playbook", playbook}).Sync(ctx)
 			if err != nil {
 				return
 			}
 		}
 	}
-	// zero error after execution to allow for missing playbook entries
-	err = nil
 	o = strings.Join([]string{target, productJson}, "\n")
 
 	if config.Flavor == flavors.FlavorAnsiblePlaybook {
@@ -78,4 +81,9 @@ func BuildContainer(
 	}
 
 	return
+}
+
+// fileExists reports whether path is a regular file in src
+func fileExists(ctx context.Context, src dagger.Directory, path string) (bool, error) {
+	return src.Exists(ctx, path, dagger.DirectoryExistsOpts{ExpectedType: dagger.ExistsTypeRegularType})
 }
