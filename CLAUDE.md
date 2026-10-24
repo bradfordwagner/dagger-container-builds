@@ -61,7 +61,11 @@ Real `custom` consumer: `containers/custom/bradfordwagner.container.custom.ansib
 
 Template clones are managed by `~/dotfiles/tasks/git-modules-bradfordwagner.yml` (the `templates_dir` loop). Add new templates there too.
 
-Templates pin the module by tag (`dagger -m https://github.com/bradfordwagner/dagger-container-builds@<tag>`) with Dagger CLI `0.21.11`. All four templates currently pin `@0.4.0`. The CLI version in template workflows must match `engineVersion` in `dagger.json`. A change here reaches templates only after you cut a new tag and bump that pin. To test an untagged change, point the template's `-m` at a branch or commit.
+Templates pin the module by tag (`dagger -m https://github.com/bradfordwagner/dagger-container-builds@<tag>`) with Dagger CLI `0.21.11`. All four templates currently pin `@0.4.1`. The CLI version in template workflows must match `engineVersion` in `dagger.json`. A change here reaches templates only after you cut a new tag and bump that pin. To test an untagged change, point the template's `-m` at a branch or commit.
+
+Testing in the template repos is pre-authorized. Push feature branches to run `container_branches.yml`. To run `container_tags.yml` end to end, push prerelease test tags on the template's `main`, named `<next semver>-betaN` (for example `0.5.0-beta1`). Tag runs publish versioned images to ghcr, and the ansible_role tag run also imports the role into Galaxy. Do not push tags without a prerelease suffix, and do not push tags to repos outside the four templates without asking.
+
+`ansible_role` tag runs import the role into Galaxy with the repo's `GALAXY_TOKEN` secret. A `401 Unauthorized` from `ansible-galaxy role import` means the token is expired. GitHub has no account-level secrets on a user account, so each role repo holds its own copy. Rotate all of them with `scripts/rollout-galaxy-token.sh`.
 
 Other repos in `gh_templates/` (go.cli, go.lib, helm.chart, tf.module, tf.workspaces) do not use this module.
 
