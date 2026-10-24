@@ -61,7 +61,7 @@ Real `custom` consumer: `containers/custom/bradfordwagner.container.custom.ansib
 
 Template clones are managed by `~/dotfiles/tasks/git-modules-bradfordwagner.yml` (the `templates_dir` loop). Add new templates there too.
 
-Templates pin the module by tag (`dagger -m https://github.com/bradfordwagner/dagger-container-builds@<tag>`) with Dagger CLI `0.15.2`. Pins are currently `@0.2.0` in mirror and ansible, and `@0.3.0` in custom. A change here reaches templates only after you cut a new tag and bump that pin. To test an untagged change, point the template's `-m` at a branch or commit.
+Templates pin the module by tag (`dagger -m https://github.com/bradfordwagner/dagger-container-builds@<tag>`) with Dagger CLI `0.21.11`. All four templates currently pin `@0.4.0`. The CLI version in template workflows must match `engineVersion` in `dagger.json`. A change here reaches templates only after you cut a new tag and bump that pin. To test an untagged change, point the template's `-m` at a branch or commit.
 
 Other repos in `gh_templates/` (go.cli, go.lib, helm.chart, tf.module, tf.workspaces) do not use this module.
 
