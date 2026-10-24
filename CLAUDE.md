@@ -46,4 +46,25 @@ Per-flavor build behavior:
 - `custom`: runs `DockerBuild` on the consumer's own Dockerfile, passing `build.args` plus `OS=<upstream.repo>:<upstream.tag>-<os>` as build args. Target tag is `<target_repo>:<version>-<os>`.
 - `ansible_*`: starts from `<upstream.repo>:<upstream.tag>-<os>` and mounts `src` at `/src`. It runs `ansible-galaxy install` for `requirements.yml`/`meta/requirements.yml` if present, then `ansible-playbook` for `test.yml`/`playbook.yml` if present. Only `ansible_playbook` publishes; `ansible_role` is a test-only build. This path uses a `dagger.Connect()` client rather than `dag`.
 
+## Flavor template repos
+
+Each flavor has a template repo, cloned under `/Users/bwagner/workspace/github/bradfordwagner/gh_templates/`. To iterate on a flavor, change the matching template first: its `config.yaml` and `.github/workflows/container_{branches,tags}.yml` are the real consumers of this module. Keep this table current when adding a flavor or template.
+
+| Flavor | Local dir (under `gh_templates/`) | GitHub repo | Workflows call |
+|---|---|---|---|
+| `mirror` | `bradfordwagner.template.container.mirror.image` | `bradfordwagner/gh-template-mirror-image` | product-json, build, manifest |
+| `ansible_playbook` | `bradfordwagner.template.ansible.playbook` | `bradfordwagner/gh-template-ansible-playbook` | product-json, build, manifest |
+| `ansible_role` | `bradfordwagner.template.ansible.role` | `bradfordwagner/gh-template-ansible-role` | product-json, build (no manifest; publishes to Galaxy on tags) |
+| `custom` | `bradfordwagner.template.container.custom.image` | `bradfordwagner/gh-template-custom-image` | product-json, build, manifest |
+
+Real `custom` consumer: `containers/custom/bradfordwagner.container.custom.ansible` (`bradfordwagner/container-ansible`, builds `ghcr.io/bradfordwagner/ansible`). The template was derived from it.
+
+Template clones are managed by `~/dotfiles/tasks/git-modules-bradfordwagner.yml` (the `templates_dir` loop). Add new templates there too.
+
+Templates pin the module by tag (`dagger -m https://github.com/bradfordwagner/dagger-container-builds@<tag>`) with Dagger CLI `0.15.2`. Pins are currently `@0.2.0` in mirror and ansible, and `@0.3.0` in custom. A change here reaches templates only after you cut a new tag and bump that pin. To test an untagged change, point the template's `-m` at a branch or commit.
+
+Other repos in `gh_templates/` (go.cli, go.lib, helm.chart, tf.module, tf.workspaces) do not use this module.
+
+## Known gaps
+
 Known gaps when adding to a flavor: `Init` only handles `mirror`, and `Manifest` has no `ansible_role` case. Adding a flavor means updating all four top-level switches plus `lib/flavors`.
