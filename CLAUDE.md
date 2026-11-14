@@ -4,6 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
+**Deprecated** in favor of [gh-template-lib](https://github.com/bradfordwagner/gh-template-lib); no new releases after `0.4.1`. See README.md for the migration.
+
 A Dagger module (Go SDK, engine `v0.21.11`, module name `container_builds`) that builds and publishes multi-arch container images from a `config.yaml` in a consumer repo. It is driven from GitHub Actions: one call produces a build matrix, one call per matrix entry builds a single arch image, and a final call stitches the per-arch images into a multi-arch manifest.
 
 ## Commands
